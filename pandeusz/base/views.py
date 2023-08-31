@@ -26,8 +26,9 @@ def place(request, pk):
 
 def topic(request, place_id, topic_id):
     topic = Topic.objects.get(id=topic_id)
+    otherTopics = Topic.objects.filter(place=place_id)
     files = File.objects.filter(topic = topic_id)
-    context = {'topic': topic, 'files': files}
+    context = {'topic': topic, 'files': files, "otherTopics": otherTopics}
     return render(request, 'base/topic.html', context)
 
 @login_required(login_url='login')
