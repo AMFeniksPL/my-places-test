@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div id="topic-content-container">
+    <a href="{% url 'add-file' topic.id %}" id="button-create">Add File</a>
+
+    <div class="main-card">
+        <h2>{{topic.name}}</h2>
+        <h3>{{topic.description}}</h3>
+
+    </div>
+    <div class="main-card">
+        <h1 id="title">Załączniki:</h1>
+        {% for file in files %}
+            <div class="attachment">
+                <embed src="{{ file.file.url }}" width="500" height="600" type="application/jpg">
+                <!-- W powyższym przykładzie założono, że plik jest typem PDF.
+                     Dostosuj atrybut 'type' oraz wymiary do typu pliku, który masz. -->
+
+                <p><a href="{{ document.file.url }}" target="_blank">Otwórz w nowym oknie</a></p>
+                <a href="{{ file.file.url }}" class="attachment-link" {% if file.file.name|slice:"-3:" == ".py" %} download {% endif %}>
+                    <span class="attachment-icon">📎</span>
+                    {{ file.file.name }}
+                </a>
+            {% if file.file.name|slice:"-3:" == ".py" %}
+                <button class="view-code-link" data-url="{{ file.file.url }}">View Code</button>
+            {% endif %}
+            </div>
+
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

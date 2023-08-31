@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div id="topic-content-container">
+    <a href="{% url 'add-file' topic.id %}" id="button-create">Add File</a>
+
+    <div class="main-card">
+        <h2>{{ topic.name }}</h2>
+        <h3>{{ topic.description }}</h3>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Dodaj plik</button>
+    </form>
+
+    {% for file in files %}
+    <li><a href="{{ file.file.url }}">{{ file.file.name }}</a></li>
+    {% endfor %}
+</div>
+{% endblock %}

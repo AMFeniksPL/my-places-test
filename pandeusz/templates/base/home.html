@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        gap: 30px;
+    }
+
+        /* Zmiana wyglądu pola input */
+        input[type="text"] {
+            padding: 30px;
+            padding-left: 50px;
+            padding-right: 50px;
+            border: 3px solid #000000;
+            border-radius: 2000px;
+            font-size: 72px;
+            width: 40%;
+        }
+</style>
+
+<h1 id="title">
+    Strona główna
+</h1>
+<center>
+<h1>Wpisz ID pokoju, który chcesz odwiedzić:</h1>
+<form method="GET" action="{% url 'find' %}">
+    <input type="text" name="q"/>
+</form>
+</center>
+
+<div class="home-container">
+    <div>
+        <h1>Lewa kolumna</h1>
+    </div>
+    <div class="card-container">
+        <a href="{% url 'create-place' %}" id="button-create">Create Place</a>
+        {% for place in places %}
+            <div class="main-card">
+                {% if request.user == place.host %}
+                <div class="edit-delete-links">
+                    <a href="{% url 'update-place' place.id %}">Edit</a>
+                    <a href="{% url 'delete-place' place.id %}">Delete</a>
+                </div>
+
+                {% endif %}
+                {% if place.isPrivate and place.host != request.user %}
+                <a href="{% url 'place_password' place.id %}">
+                    {% else %}
+                <a href="{% url 'place' place.id %}">
+                    {% endif %}
+                    <h2>{{ place.name }}</h2>
+                    <span>@{{ place.host.username }}</span>
+                </a>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h1>prawa kolumna</h1>
+    </div>
+</div>
+
+
+{% endblock %}

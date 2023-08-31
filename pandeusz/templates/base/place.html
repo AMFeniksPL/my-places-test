@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div id ="topics-outer-container">
+    <h1 id="title">{{ place.name }}</h1>
+    {% if request.user == place.host %}
+    <a href="{% url 'create-topic' place.id %}" id="button-create">Create topic</a>
+    {% endif %}
+    <div id="main-container">
+        {% for topic in topics %}
+        <div class="main-card">
+            <div class="edit-delete-links">
+                {% if request.user == place.host %}
+                <a href="{% url 'update-topic' topic.id %}">Edit</a>
+                <a href="{% url 'delete-topic' topic.id %}">Delete</a>
+                {% endif %}
+            </div>
+            <a href="{% url 'topic' place.id topic.id %}">
+                <div class="framed">
+                    <h2>{{ topic.name }}</h2>
+                    <h3>{{ topic.description }}</h3>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
