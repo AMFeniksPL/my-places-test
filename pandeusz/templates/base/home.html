@@ -36,7 +36,10 @@
         <h1>Lewa kolumna</h1>
     </div>
     <div class="card-container">
+        {% if user.is_authenticated %}
         <a href="{% url 'create-place' %}" id="button-create">Create Place</a>
+        {% endif %}
+
         {% for place in places %}
             <div class="main-card">
                 {% if request.user == place.host %}
