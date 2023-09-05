@@ -2,7 +2,7 @@
 
 {% block content %}
 <div id ="topics-outer-container">
-    <h1 id="title">{{ place.name }}</h1>
+    <h1>{{ place.name }}</h1>
     {% if request.user == place.host %}
     <a href="{% url 'create-topic' place.id %}" id="button-create">Create topic</a>
     {% endif %}

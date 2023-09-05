@@ -5,9 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import PlaceForm, TopicForm, FileForm, CustomUserForm
-from django.contrib.auth.forms import UserCreationForm
-# Create your views here.
-
+from django.http import JsonResponse
 
 
 def home(request):
@@ -16,20 +14,21 @@ def home(request):
     return render(request, 'base/home.html', context)
 
 
-
-
 def place(request, pk):
     place = Place.objects.get(id=pk)
-    topics = Topic.objects.filter(place = pk)
+    topics = Topic.objects.filter(place=pk)
     context = {'place': place, 'topics': topics}
     return render(request, 'base/place.html', context)
 
+
 def topic(request, place_id, topic_id):
     topic = Topic.objects.get(id=topic_id)
+    place=Place.objects.get(id=place_id)
     otherTopics = Topic.objects.filter(place=place_id)
-    files = File.objects.filter(topic = topic_id)
-    context = {'topic': topic, 'files': files, "otherTopics": otherTopics}
+    files = File.objects.filter(topic=topic_id)
+    context = {'topic': topic, 'files': files, "otherTopics": otherTopics, 'place': place}
     return render(request, 'base/topic.html', context)
+
 
 @login_required(login_url='login')
 def create_place(request):
@@ -41,6 +40,7 @@ def create_place(request):
             return redirect('home')
     context = {'form': form}
     return render(request, 'base/place_form.html', context)
+
 
 @login_required(login_url='login')
 def create_topic(request, place_id):
@@ -54,6 +54,7 @@ def create_topic(request, place_id):
     context = {'form': form}
     return render(request, 'base/topic_form.html', context)
 
+
 @login_required(login_url='login')
 def update_place(request, pk):
     place = Place.objects.get(id=pk)
@@ -62,11 +63,11 @@ def update_place(request, pk):
         form = PlaceForm(request.POST, instance=place)
         if form.is_valid():
             form.save()
-            return redirect('home')
-
+            return redirect(f'/place/{place.id}')
 
     context = {'form': form}
     return render(request, 'base/place_form.html', context)
+
 
 @login_required(login_url='login')
 def update_topic(request, pk):
@@ -76,10 +77,11 @@ def update_topic(request, pk):
         form = TopicForm(request.POST, instance=topic)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect(f'/place/{topic.place.id}/topic/{topic.id}')
 
     context = {'form': form}
     return render(request, 'base/topic_form.html', context)
+
 
 @login_required(login_url='login')
 def delete_place(request, pk):
@@ -89,6 +91,7 @@ def delete_place(request, pk):
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': place})
 
+
 @login_required(login_url='login')
 def delete_topic(request, pk):
     topic = Topic.objects.get(id=pk)
@@ -96,6 +99,7 @@ def delete_topic(request, pk):
         topic.delete()
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': topic})
+
 
 @login_required(login_url='login')
 def add_file(request, pk):
@@ -111,8 +115,8 @@ def add_file(request, pk):
 
     return render(request, 'base/add_file.html', {'form': form, 'topic': topic, 'place': place})
 
-def login_page(request):
 
+def login_page(request):
     page = 'login'
     if request.method == "POST":
         email = request.POST.get("email")
@@ -133,9 +137,11 @@ def login_page(request):
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
 
+
 def logout_user(request):
     logout(request)
     return redirect("home")
+
 
 def register_user(request):
     if request.method != 'POST':
@@ -149,7 +155,6 @@ def register_user(request):
     return render(request, 'base/login_register.html', context)
 
 
-
 def find(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     try:
@@ -159,8 +164,10 @@ def find(request):
     except:
         return redirect("no-place")
 
+
 def no_place(request):
     return render(request, 'base/no_place.html')
+
 
 def place_password(request, pk):
     place = Place.objects.get(id=pk)
@@ -180,3 +187,15 @@ def place_password(request, pk):
 
     context = {'place': place}
     return render(request, 'base/place_password.html', context)
+
+
+def delete_file(request):
+    if request.method == 'POST':
+        file_id = request.POST.get('file_id')
+        try:
+            file_to_delete = File.objects.get(pk=file_id)
+            file_to_delete.delete()
+            return JsonResponse({'message': 'Plik został usunięty.'})
+        except File.DoesNotExist:
+            return JsonResponse({'error': 'Plik nie istnieje.'})
+    return JsonResponse({'error': 'Niepoprawne żądanie.'})

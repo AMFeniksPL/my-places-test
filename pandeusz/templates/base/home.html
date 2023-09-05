@@ -21,25 +21,20 @@
         }
 </style>
 
-<h1 id="title">
+<h1>
     Strona główna
 </h1>
-<center>
-<h1>Wpisz ID pokoju, który chcesz odwiedzić:</h1>
-<form method="GET" action="{% url 'find' %}">
-    <input type="text" name="q"/>
-</form>
-</center>
+
 
 <div class="home-container">
     <div>
-        <h1>Lewa kolumna</h1>
+        <center>
+        {% if user.is_authenticated %}
+            <a href="{% url 'create-place' %}" id="button-create">Stwórz własny pokój</a>
+        {% endif %}
+        </center>
     </div>
     <div class="card-container">
-        {% if user.is_authenticated %}
-        <a href="{% url 'create-place' %}" id="button-create">Create Place</a>
-        {% endif %}
-
         {% for place in places %}
             <div class="main-card">
                 {% if request.user == place.host %}
@@ -54,11 +49,11 @@
                     {% else %}
                 <a href="{% url 'place' place.id %}">
                     {% endif %}
-                    <h2>{{ place.name }}</h2>
                     <span>@{{ place.host.username }}</span>
+                    <h2>{{ place.name }}</h2>
+                    <h3>{{place.description}}</h3>
                 </a>
             </div>
-            <br>
         {% endfor %}
     </div>
 

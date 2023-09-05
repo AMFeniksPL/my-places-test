@@ -19,4 +19,5 @@ urlpatterns = [
     path('find', views.find, name='find'),
     path('no-place', views.no_place, name='no-place'),
     path('place-password/<str:pk>/', views.place_password, name='place_password'),
+    path('delete-file', views.delete_file, name='delete-file'),
 ]

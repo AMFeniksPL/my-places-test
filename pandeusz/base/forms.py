@@ -11,7 +11,7 @@ class PlaceForm(ModelForm):
 class TopicForm(ModelForm):
     class Meta:
         model = Topic
-        fields = ['name', 'description', 'place']
+        fields = ['name', 'description']
 
 class FileForm(ModelForm):
     class Meta:

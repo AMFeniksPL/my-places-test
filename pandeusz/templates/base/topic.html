@@ -13,46 +13,50 @@
         <h1>Lista tematów: </h1>
         {% for topicItem in otherTopics %}
             {% if topicItem.id == topic.id %}
-            <div class="main-card">
+            <div class="main-card-test">
+                <div class="framed">
+                    <h2>{{ topicItem.name }}</h2>
+                </div>
             {% else %}
             <div class="main-card">
-               {% endif %}
+
                 <a href="{% url 'topic' topic.place.id topicItem.id %}">
                     <div class="framed">
                         <h2>{{ topicItem.name }}</h2>
                     </div>
                 </a>
+                {% endif %}
         </div>
         {% endfor %}
     </div>
 
 
     <div id="topic-content-container">
-        <a href="{% url 'add-file' topic.id %}" id="button-create">Add File</a>
+
 
         <div class="main-card">
+            <a href="{% url 'update-topic' topic.id %}">Edit</a>
             <h2>{{topic.name}}</h2>
-            <h3>{{topic.description}}</h3>
+            <div id="markdown-description">
+                <h3>{{topic.description}}</h3>
+            </div>
+
 
         </div>
         <div class="main-card">
             <h1 id="title">Załączniki:</h1>
-            {% for file in files %}
-                <div class="attachment">
-                    <embed src="{{ file.file.url }}" width="500" height="600" type="application/jpg">
-                    <!-- W powyższym przykładzie założono, że plik jest typem PDF.
-                         Dostosuj atrybut 'type' oraz wymiary do typu pliku, który masz. -->
-
-                    <p><a href="{{ document.file.url }}" target="_blank">Otwórz w nowym oknie</a></p>
-                    <a href="{{ file.file.url }}" class="attachment-link" {% if file.file.name|slice:"-3:" == ".py" %} download {% endif %}>
-                        <span class="attachment-icon">📎</span>
-                        {{ file.file.name }}
-                    </a>
+            <a href="{% url 'add-file' topic.id %}" id="button-create">Add File</a>
+        {% for file in files %}
+            <div class="attachment">
+                <a href="{{ file.file.url }}" class="attachment-link" {% if file.file.name|slice:"-3:" == ".py" %} download {% endif %}>
+                    <span class="attachment-icon">📎</span>
+                    {{ file.file.name }}
+                </a>
                 {% if file.file.name|slice:"-3:" == ".py" %}
                     <button class="view-code-link" data-url="{{ file.file.url }}">View Code</button>
                 {% endif %}
-                </div>
-
+                <button class="delete-file-link" data-file-id="{{ file.id }}">Delete</button>
+            </div>
         {% endfor %}
         </div>
     </div>
