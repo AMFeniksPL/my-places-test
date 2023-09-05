@@ -6,7 +6,7 @@ class User(AbstractUser):
     name = models.CharField(max_length = 200, null=True)
     email = models.EmailField(unique=True)
     bio = models.TextField(null=True)
-
+    username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

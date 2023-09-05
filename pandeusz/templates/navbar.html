@@ -1,15 +1,9 @@
 <div class = "navbar">
     <div>
     <h1>
+
   <a href="/" id="home-link">MyPlaces</a>
-    {% if '/place/' in request.path %}
-         > <a href="{% url 'place' place.id %}">
-              {{ place.name }}
-            </a>
-      {% endif %}
-     {% if '/topic/' in request.path %}
-        > <a href="{% url 'topic' place.id topic.id %}">{{ topic.name }}</a>
-    {% endif %}
+
   </a>
     </h1>
     </div>

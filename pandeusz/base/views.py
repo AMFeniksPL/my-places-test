@@ -36,8 +36,17 @@ def create_place(request):
     if request.method == "POST":
         form = PlaceForm(request.POST)
         if form.is_valid():
-            form.save()
+            Place.objects.create(
+                host=request.user,
+                name=request.POST.get('name'),
+                description=request.POST.get('description'),
+                isPrivate=True if form.data.get("status") == "on" else False,
+                accessPassword=request.POST.get('accessPassword')
+
+            )
             return redirect('home')
+        else:
+            print(form.errors)
     context = {'form': form}
     return render(request, 'base/place_form.html', context)
 
@@ -47,10 +56,16 @@ def create_topic(request, place_id):
     form = TopicForm()
     if request.method == "POST":
         form = TopicForm(request.POST)
-        form.place = place_id
+        place = Place.objects.get(id=place_id)
         if form.is_valid():
-            form.save()
+            Topic.objects.create(
+                place=place,
+                name=request.POST.get('name'),
+                description=request.POST.get('description'),
+            )
             return redirect('home')
+        else:
+            print(form.errors)
     context = {'form': form}
     return render(request, 'base/topic_form.html', context)
 
@@ -147,10 +162,15 @@ def register_user(request):
     if request.method != 'POST':
         form = CustomUserForm()
     else:
+        print("Nie Post")
         form = CustomUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('users:login')
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            print(form.errors)
     context = {'form': form}
     return render(request, 'base/login_register.html', context)
 

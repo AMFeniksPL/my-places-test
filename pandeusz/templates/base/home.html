@@ -49,7 +49,7 @@
                     {% else %}
                 <a href="{% url 'place' place.id %}">
                     {% endif %}
-                    <span>@{{ place.host.username }}</span>
+                    <span>@{{ place.host.name }}</span>
                     <h2>{{ place.name }}</h2>
                     <h3>{{place.description}}</h3>
                 </a>

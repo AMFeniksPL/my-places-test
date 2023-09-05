@@ -8,7 +8,7 @@
   <form method="POST" action = "">
     {% csrf_token %}
     <label>Email:</label>
-    <input type="text" name="email" placeholder="Enter email:">
+    <input type="email" name="email" placeholder="Enter email:">
 
     <label>Password:</label>
     <input type="password" name="password" placeholder="Enter Password:">
@@ -24,8 +24,8 @@
   <form method="POST" action="">
     {% csrf_token %}
     <h3>REGISTER</h3>
-    <h5>{{form.username.label}}</h5>
-    {{form.username}}
+    <h5>{{form.name.label}}</h5>
+    {{form.name}}
     <h5>{{form.email.label}}</h5>
     {{form.email}}
     <h5>{{form.password1.label}}</h5>
