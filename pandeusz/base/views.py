@@ -1,3 +1,6 @@
+import secrets
+import string
+
 from django.shortcuts import render, redirect
 from .models import Place, Topic, File
 from .models import User
@@ -41,8 +44,8 @@ def create_place(request):
                 name=request.POST.get('name'),
                 description=request.POST.get('description'),
                 isPrivate=True if form.data.get("status") == "on" else False,
-                accessPassword=request.POST.get('accessPassword')
-
+                accessPassword=request.POST.get('accessPassword'),
+                searchCode=generate_unique_code()
             )
             return redirect('home')
         else:
@@ -178,7 +181,7 @@ def register_user(request):
 def find(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     try:
-        place = Place.objects.get(pk__icontains=q)
+        place = Place.objects.get(searchCode__icontains=q)
 
         return redirect(f"place/{place.pk}")
     except:
@@ -219,3 +222,15 @@ def delete_file(request):
         except File.DoesNotExist:
             return JsonResponse({'error': 'Plik nie istnieje.'})
     return JsonResponse({'error': 'Niepoprawne żądanie.'})
+
+
+def generate_unique_code():
+    # Generuj losowy kod składający się z liter i cyfr
+    characters = string.ascii_letters + string.digits
+    code = ''.join(secrets.choice(characters) for _ in range(10))
+
+    # Sprawdź, czy kod jest unikalny, jeśli nie, wygeneruj nowy
+    while Place.objects.filter(searchCode=code).exists():
+        code = ''.join(secrets.choice(characters) for _ in range(10))
+
+    return code

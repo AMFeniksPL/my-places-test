@@ -1,6 +1,20 @@
+import secrets
+import string
+
+
+
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
+# def generate_unique_code(asd):
+#     # Generuj losowy kod składający się z liter i cyfr
+#     characters = string.ascii_letters + string.digits
+#     code = ''.join(secrets.choice(characters) for _ in range(10))
+#
+#     # Sprawdź, czy kod jest unikalny, jeśli nie, wygeneruj nowy
+#     while asd.objects.filter(searchCode=code).exists():
+#         code = ''.join(secrets.choice(characters) for _ in range(10))
+#
 
 class User(AbstractUser):
     name = models.CharField(max_length = 200, null=True)
@@ -18,9 +32,10 @@ class Place(models.Model):
     # participants =
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    searchCode = models.CharField(max_length=10, unique=False, blank=False)
 
     isPrivate = models.BooleanField(default=False)
-    accessPassword = models.CharField(max_length=100, null=True, blank=True, default="")
+    accessPassword = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         ordering = ["updated", "created"]

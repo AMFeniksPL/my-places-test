@@ -91,6 +91,12 @@ form {
   color: #fff; /* Zmiana na jasny kolor tekstu */
 }
 
+.place-main-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        gap: 30px;
+}
+
 /* Style dla nazwy użytkownika */
 .main-card span {
   display: block;

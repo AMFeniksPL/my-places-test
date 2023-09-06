@@ -1,28 +1,43 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<div id ="topics-outer-container">
-    <h1>{{ place.name }}</h1>
-    {% if request.user == place.host %}
-    <a href="{% url 'create-topic' place.id %}" id="button-create">Create topic</a>
-    {% endif %}
-    <div id="main-container">
-        {% for topic in topics %}
-        <div class="main-card">
-            <div class="edit-delete-links">
-                {% if request.user == place.host %}
-                <a href="{% url 'update-topic' topic.id %}">Edit</a>
-                <a href="{% url 'delete-topic' topic.id %}">Delete</a>
-                {% endif %}
-            </div>
-            <a href="{% url 'topic' place.id topic.id %}">
-                <div class="framed">
-                    <h2>{{ topic.name }}</h2>
-                    <h3>{{ topic.description }}</h3>
-                </div>
-            </a>
+<div class="place-main-container">
+    <div>
+        <div>
+            {% if request.user == place.host %}
+                <a href="{% url 'create-topic' place.id %}" id="button-create">Create topic</a>
+            {% endif %}
+
         </div>
-        {% endfor %}
+        <div>
+            <a href="{% url 'update-place' place.id %}">Edytuj miejsce</a>
+        </div>
+        <div class="main-card">
+            <h1>Kod do miejsca:</h1>
+            <h1>{{ place.searchCode }}</h1>
+        </div>
+    </div>
+    <div id ="topics-outer-container">
+        <h1>{{ place.name }}</h1>
+        <h2>{{ place.description }}</h2>
+        <div id="main-container">
+            {% for topic in topics %}
+            <div class="main-card">
+                <div class="edit-delete-links">
+                    {% if request.user == place.host %}
+                    <a href="{% url 'update-topic' topic.id %}">Edit</a>
+                    <a href="{% url 'delete-topic' topic.id %}">Delete</a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'topic' place.id topic.id %}">
+                    <div class="framed">
+                        <h2>{{ topic.name }}</h2>
+                        <h3>{{ topic.description }}</h3>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
